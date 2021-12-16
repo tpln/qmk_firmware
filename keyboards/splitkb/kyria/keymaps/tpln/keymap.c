@@ -328,7 +328,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case ST_MACRO_I3_UP:
     if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_LSFT(SS_TAP(X_F))));
+            //SEND_STRING(SS_LGUI(SS_LSFT(SS_TAP(X_F))));
+            SEND_STRING(SS_LGUI(SS_TAP(X_U)));
 
     }
     break;
