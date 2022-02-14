@@ -723,64 +723,77 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_180; }
 
-static uint8_t prev_layer = 0;
-static uint8_t flash_count = 0;
+//static uint8_t prev_layer = 0;
+//static uint8_t flash_count = 0;
 
-bool oled_task_user(void) {
-    uint8_t layer = biton32(layer_state);
-    if (layer != prev_layer) {
-            prev_layer = layer;
-            flash_count = 253;
-    }
-    bool invert = false;
-    if (flash_count != 0) {
-            invert = !(flash_count % 2);
-            oled_invert(invert);
-            flash_count++;
-    }
-        
-    uint8_t mods = get_mods();
-    if (is_keyboard_master()) {
-        switch (get_highest_layer(layer_state|default_layer_state)) {
-            case L_BASE:
-                oled_write_P(PSTR("BASE\n"), false);
-                break;
-            case L_NUM:
-                    oled_write_P(PSTR("NUM\n"), false);
-                break;
-            case L_MOVE:
-                oled_write_P(PSTR("MOV\n"), false);
-                break;
-            case L_SYS:
-                oled_write_P(PSTR("SYS\n"), false);
-                break;
-            case L_GAMING:
-                oled_write_P(PSTR("GAMING\n"), false);
-                break;
-            case L_SWITCH:
-                oled_write_P(PSTR("SWITCH\n"), false);
-                break;
-            default:
-                oled_write_P(PSTR("Undefined\n"), false);
+void oled_write_spaces(int n, bool invert) {
+
+        for (int c = 0; c < n; c++) {
+                oled_write_P(PSTR(" "), invert);;
         }
+}
 
-        oled_write_P(PSTR("\n"), false);
+void print_layer(const char* name, int spaces_before, int spaces_after, int number) {
+   const char* empty_row =
+           PSTR("-                  -\n");
 
-            oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("     "), false);
-            oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHIFT ") : PSTR("      "), false);
-            oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT ") : PSTR("    "), false);
-            oled_write_P((mods & MOD_MASK_GUI) ? PSTR("META ") : PSTR("     "), false);                        
-        // Write host Keyboard LED Status to OLEDs
-        led_t led_usb_state = host_keyboard_led_state();
-        oled_write_P(led_usb_state.num_lock    ? PSTR("NUMLCK ") : PSTR("       "), false);
-        oled_write_P(led_usb_state.caps_lock   ? PSTR("CAPLCK ") : PSTR("       "), false);
-        oled_write_P(led_usb_state.scroll_lock ? PSTR("SCRLCK ") : PSTR("       "), false);
-    } else {
-        // clang-format off
-        /* // clang-format on */
+   for (int i = 0; i < number; i++) {
+           oled_write_P(empty_row, false);
+   }
 
-    }
-    return false;
+   oled_write_spaces(spaces_before, true);
+   oled_write_P(name, false);
+   oled_write_spaces(spaces_after, true);
+   oled_write_P(PSTR("\n"), false);
+
+   for (int i = 0; i < (5-number); i++) {
+           oled_write_P(empty_row, false);
+   }
+}
+
+bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
+        
+        uint8_t mods = get_mods();
+        if (is_keyboard_master()) {
+                switch (get_highest_layer(layer_state|default_layer_state)) {
+                case L_BASE:
+                        print_layer(PSTR(" BASE "), 2, 12, 0);
+                        break;
+                case L_NUM:
+                        print_layer(PSTR(" NUM "), 4, 11, 1);
+                        break;
+                case L_MOVE:
+                        print_layer(PSTR(" MOVE "), 6, 8, 2);
+                        break;
+                case L_SYS:
+                        print_layer(PSTR(" SYS "), 8, 7, 3);
+                        break;
+                case L_GAMING:
+                        print_layer(PSTR(" GAMING "), 10, 2, 4);
+                        break;
+                case L_SWITCH:
+                        print_layer(PSTR(" SWITCH "), 12, 0, 5);
+                        break;
+                default:
+                        oled_write_P(PSTR("Undefined\n\n\n\n\n\n\n"), false);
+                }
+
+                oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("     "), false);
+                oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHIFT ") : PSTR("      "), false);
+                oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT ") : PSTR("    "), false);
+                oled_write_P((mods & MOD_MASK_GUI) ? PSTR("META ") : PSTR("     "), false);                        
+                // Write host Keyboard LED Status to OLEDs
+                led_t led_usb_state = host_keyboard_led_state();
+                oled_write_P(led_usb_state.num_lock    ? PSTR("NUMLCK ") : PSTR("       "), false);
+                oled_write_P(led_usb_state.caps_lock   ? PSTR("CAPLCK ") : PSTR("       "), false);
+                oled_write_P(led_usb_state.scroll_lock ? PSTR("SCRLCK ") : PSTR("       "), false);
+        } else {
+                /* static int slave_anim = 0; */
+                /* slave_anim++; */
+                /* print_layer("O", slave_anim % 16, 16-(slave_anim % 16), 3); */
+
+        }
+        return false;
 }
 #endif
 
