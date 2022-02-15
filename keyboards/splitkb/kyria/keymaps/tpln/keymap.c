@@ -1,9 +1,7 @@
 #include QMK_KEYBOARD_H
 
 // TODO
-// * More visible layer indication in OLED-screen.
-//   * Bigger OLED-font? Just scale the font in oled_write_char
-//   * ASCII-art positional indicator?
+// * Mouse
 
 // Layers:
 // 0 = base
@@ -15,7 +13,8 @@
 // 3 = movement
 #define L_SYS 3
 #define L_GAMING 4
-#define L_SWITCH 5
+#define L_MOUSE 5
+#define L_SWITCH 6
 
 #define KC_DASH KC_MINUS
 
@@ -104,9 +103,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [L_BASE] = LAYOUT(
     TD(D_TAB), KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                                                        KC_Y                , KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
-    TD(D_OB), KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                                                        KC_H                , KC_J   , KC_K   , KC_L   , KC_SCLN, TD(D_CB),
-     TD(D_QT), KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_LALT  ,    KC_LGUI,    MO(L_SWITCH),MO(L_SYS)        , KC_N                , KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
-                                 KC_LSFT, KC_LGUI, KC_LCTL, TD(D_SPC), MO(L_MOVE), KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
+    TD(D_OB), KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                                                         KC_H                , KC_J   , KC_K   , KC_L   , KC_SCLN, TD(D_CB),
+    TD(D_QT), KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_LALT  , MO(L_MOUSE), MO(L_SWITCH),MO(L_SYS)        , KC_N                , KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
+                                KC_LSFT, KC_LGUI, KC_LCTL, TD(D_SPC), MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
  * NUM
@@ -157,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,     KC_F9,    KC_F10,    KC_F11 ,    KC_F12,_______   ,                                      KC_PGUP         ,   KC_HOME,   KC_UP,  KC_END, _______, LCTL(KC_PLUS),
        _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3) ,LGUI(KC_4),LGUI(KC_5),                                      KC_PGDN         ,   KC_LEFT, KC_DOWN,KC_RIGHT, _______, LCTL(KC_MINUS),
        _______,   _______, LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K), _______,_______,_______,_______     ,LGUI(LSFT(KC_R)),   _______, _______, _______, _______, LGUI(LSFT(KC_M)),
-                                        _______ ,   _______, _______  , _______,_______,_______,LCTL(KC_SPC),         _______, LGUI(KC_9), LGUI(KC_0)
+                                        _______ ,   _______,  _______ , _______,_______,_______,LCTL(KC_SPC),         _______, LGUI(KC_9), LGUI(KC_0)
      ),
         
 /*
@@ -175,10 +174,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_GAMING] = LAYOUT(
-       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
+        KC_TAB, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
   KC_CAPS_LOCK, _______, _______, _______, _______, _______,  KC_ESC, KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______,
-                                    KC_F9,   KC_F5, _______, _______, KC_LSFT, _______, _______, _______, _______, _______
+                                    KC_F9,   KC_F5, _______,  KC_SPC, KC_LSFT, _______, _______, _______, _______, _______
      ),
                 
 /*
@@ -202,6 +201,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
      ),
 
+/*
+ * Layer template
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |        |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [L_MOUSE] = LAYOUT(
+                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_UP  , KC_MS_BTN1, KC_MS_UP  , KC_MS_BTN2 , _______, _______,
+                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN, KC_MS_RIGHT, _______, _______,
+                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ ,      _______,    _______,   _______ ,     _______, _______, _______,
+                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
     
 // /*
 //  * Layer template
@@ -726,34 +745,40 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_
 //static uint8_t prev_layer = 0;
 //static uint8_t flash_count = 0;
 
-void oled_write_spaces(int n, bool invert) {
+void oled_write_spaces(uint8_t n, bool invert) {
 
-        for (int c = 0; c < n; c++) {
+        for (uint8_t c = 0; c < n; c++) {
                 oled_write_P(PSTR(" "), invert);;
         }
 }
 
-void print_layer(const char* name, int spaces_before, int spaces_after, int number) {
-   const char* empty_row =
-           PSTR("-                  -\n");
+void print_empty_lines(uint8_t number) {
+        for (uint8_t i = 0; i < number; i++) {
+                oled_write_P(PSTR("\n"), false);
+        }
+}
 
-   for (int i = 0; i < number; i++) {
-           oled_write_P(empty_row, false);
-   }
+void print_layer(const char* name, uint8_t spaces_before, uint8_t spaces_after, uint8_t number) {
 
-   oled_write_spaces(spaces_before, true);
-   oled_write_P(name, false);
-   oled_write_spaces(spaces_after, true);
-   oled_write_P(PSTR("\n"), false);
-
-   for (int i = 0; i < (5-number); i++) {
-           oled_write_P(empty_row, false);
-   }
+#ifdef DISPLAY_FANCY_LAYER
+        print_empty_lines(number);
+        oled_write_spaces(spaces_before, true);
+        oled_write_P(name, false);
+        oled_write_spaces(spaces_after, true);
+        oled_write_P(PSTR("\n"), false);
+        print_empty_lines(5-number);
+#else
+        oled_write_P(name, false);
+#endif
 }
 
 bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
-        
+
+        static int8_t c = 0;
+        static int8_t i = 1;
+#ifdef DISPLAY_MODS
         uint8_t mods = get_mods();
+#endif
         if (is_keyboard_master()) {
                 switch (get_highest_layer(layer_state|default_layer_state)) {
                 case L_BASE:
@@ -771,23 +796,34 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
                 case L_GAMING:
                         print_layer(PSTR(" GAMING "), 10, 2, 4);
                         break;
-                case L_SWITCH:
-                        print_layer(PSTR(" SWITCH "), 12, 0, 5);
+                case L_MOUSE:
+                        print_layer(PSTR(" MOUSE "), 12, 0, 5);
                         break;
-                default:
-                        oled_write_P(PSTR("Undefined\n\n\n\n\n\n\n"), false);
+                case L_SWITCH:
+                        c = c + i;
+                        if (c % 5 == 0) {
+                                i = -i;
+                        }
+                        print_layer(PSTR(" SWITCH "), 6, 6, c % 6);
+                        break;
                 }
-
+#ifdef DISPLAY_MODS
                 oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("     "), false);
                 oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHIFT ") : PSTR("      "), false);
                 oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT ") : PSTR("    "), false);
-                oled_write_P((mods & MOD_MASK_GUI) ? PSTR("META ") : PSTR("     "), false);                        
+                oled_write_P((mods & MOD_MASK_GUI) ? PSTR("META ") : PSTR("     "), false);
+
+                
                 // Write host Keyboard LED Status to OLEDs
                 led_t led_usb_state = host_keyboard_led_state();
-                oled_write_P(led_usb_state.num_lock    ? PSTR("NUMLCK ") : PSTR("       "), false);
+                //oled_write_P(led_usb_state.num_lock    ? PSTR("NUMLCK ") : PSTR("       "), false);
                 oled_write_P(led_usb_state.caps_lock   ? PSTR("CAPLCK ") : PSTR("       "), false);
-                oled_write_P(led_usb_state.scroll_lock ? PSTR("SCRLCK ") : PSTR("       "), false);
+                //oled_write_P(led_usb_state.scroll_lock ? PSTR("SCRLCK ") : PSTR("       "), false);
+#endif
         } else {
+                // slave side display, seems this one doesn't know what is going on.
+                // in order to show something meaningful, need to first transfer data
+                // over the TRRS cable...
                 /* static int slave_anim = 0; */
                 /* slave_anim++; */
                 /* print_layer("O", slave_anim % 16, 16-(slave_anim % 16), 3); */
