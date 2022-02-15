@@ -26,7 +26,7 @@
 
 
 enum tap_dance_codes {
- D_OB = 1, // open brackets, ({[
+ D_OB = 0, // open brackets, ({[
  D_CB, // closing brackets, )}]
  D_QT, // Quotes, '"`
  D_DSH, // dashes, -_~
@@ -51,25 +51,7 @@ enum {
 };
 
 enum custom_keycodes {
-  ST_MACRO_I3_UP = SAFE_RANGE,
-  ST_MACRO_I3_DOWN,
-  ST_MACRO_I3_LEFT,
-  ST_MACRO_I3_RIGHT,
-  ST_MACRO_EMACS_UP,
-  ST_MACRO_EMACS_DOWN,
-  ST_MACRO_EMACS_LEFT,
-  ST_MACRO_EMACS_RIGHT,
-  ST_MACRO_I3_1,
-  ST_MACRO_I3_2,
-  ST_MACRO_I3_3,
-  ST_MACRO_I3_4,
-  ST_MACRO_I3_5,
-  ST_MACRO_I3_6,
-  ST_MACRO_I3_7,
-  ST_MACRO_I3_8,
-  ST_MACRO_I3_9,
-  ST_MACRO_I3_10,
-  M_ARROW_RD, //=>
+  M_ARROW_RD = SAFE_RANGE, //=>
   M_ARROW_LD, //<=
   M_ARROW_RS, //->
   M_DQT, //""
@@ -593,116 +575,6 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case ST_MACRO_I3_UP:
-    if (record->event.pressed) {
-            //SEND_STRING(SS_LGUI(SS_LSFT(SS_TAP(X_F))));
-            SEND_STRING(SS_LGUI(SS_TAP(X_U)));
-
-    }
-    break;
-    case ST_MACRO_I3_LEFT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_H)));
-
-    }
-    break;
-    case ST_MACRO_I3_DOWN:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_J)));
-
-    }
-    break;
-    case ST_MACRO_I3_RIGHT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_K)));
-
-    }
-    break;
-    case ST_MACRO_EMACS_UP:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LSFT(SS_TAP(X_UP)));
-
-    }
-    break;
-    case ST_MACRO_EMACS_LEFT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LSFT(SS_TAP(X_LEFT)));
-
-    }
-    break;
-    case ST_MACRO_EMACS_DOWN:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LSFT(SS_TAP(X_DOWN)));
-
-    }
-    break;
-    case ST_MACRO_EMACS_RIGHT:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LSFT(SS_TAP(X_RIGHT)));
-
-    }
-    break;
-    case ST_MACRO_I3_1:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_1)));
-
-    }
-    break;
-    case ST_MACRO_I3_2:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_2)));
-
-    }
-    break;
-    case ST_MACRO_I3_3:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_3)));
-
-    }
-    break;
-    case ST_MACRO_I3_4:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_4)));
-
-    }
-    break;
-    case ST_MACRO_I3_5:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_5)));
-
-    }
-    break;
-    case ST_MACRO_I3_6:
-    if (record->event.pressed) {
-            SEND_STRING(SS_LGUI(SS_TAP(X_6)));
-
-    }
-    break;
-    case ST_MACRO_I3_7:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_7)));
-
-    }
-    break;
-    case ST_MACRO_I3_8:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_8)));
-
-    }
-    break;
-    case ST_MACRO_I3_9:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_9)));
-
-    }
-    break;
-    case ST_MACRO_I3_10:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LGUI(SS_TAP(X_0)));
-
-    }
-    break;
-
   case M_ARROW_RD: //=>
           if (record->event.pressed) {
                   SEND_STRING(SS_TAP(X_EQUAL) SS_DELAY(100) SS_LSFT(SS_TAP(X_DOT)));
