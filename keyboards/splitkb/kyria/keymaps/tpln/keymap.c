@@ -87,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     TD(D_TAB), KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                                                        KC_Y                , KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
     TD(D_OB), KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                                                         KC_H                , KC_J   , KC_K   , KC_L   , KC_SCLN, TD(D_CB),
     TD(D_QT), KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_LALT  , MO(L_MOUSE), MO(L_SWITCH),MO(L_SYS)        , KC_N                , KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
-                                KC_LSFT, KC_LGUI, KC_LCTL, TD(D_SPC), MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
+    KC_LSFT, KC_LGUI, KC_LCTL, LT(L_MOVE, KC_SPC), MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
  * NUM
@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                       KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, _______,
        _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
          M_DQT, _______, _______, _______,M_ARROW_RS,M_ARROW_LD,_______,_______,_______,_______,M_ARROW_RD,KC_BSLS,KC_PIPE, KC_SLSH,   M_CMT, _______,
-                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+                                  _______, _______, _______, TD(D_QT), TD(D_EQ), _______, _______, _______, _______, _______
      ),
 
  /*
@@ -138,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,     KC_F9,    KC_F10,    KC_F11 ,    KC_F12,_______   ,                                      KC_PGUP         ,   KC_HOME,   KC_UP,  KC_END, _______, LCTL(KC_PLUS),
        _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3) ,LGUI(KC_4),LGUI(KC_5),                                      KC_PGDN         ,   KC_LEFT, KC_DOWN,KC_RIGHT, _______, LCTL(KC_MINUS),
        _______,   _______, LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K), _______,_______,_______,_______     ,LGUI(LSFT(KC_R)),   _______, _______, _______, _______, LGUI(LSFT(KC_M)),
-                                        _______ ,   _______,  _______ , _______,_______,_______,LCTL(KC_SPC),         _______, LGUI(KC_9), LGUI(KC_0)
+       _______ ,   _______,  _______ , _______,_______,_______,LCTL(KC_SPC),         _______, LGUI(KC_9), LGUI(KC_0)
      ),
         
 /*
@@ -683,7 +683,7 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
                 oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("     "), false);
                 oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHIFT ") : PSTR("      "), false);
                 oled_write_P((mods & MOD_MASK_ALT) ? PSTR("ALT ") : PSTR("    "), false);
-                oled_write_P((mods & MOD_MASK_GUI) ? PSTR("META ") : PSTR("     "), false);
+                oled_write_P((mods & MOD_MASK_GUI) ? PSTR("META \n") : PSTR("     \n"), false);
 
                 
                 // Write host Keyboard LED Status to OLEDs
