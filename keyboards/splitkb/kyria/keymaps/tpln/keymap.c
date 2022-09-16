@@ -95,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [L_NUM] = LAYOUT(
        _______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                       KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, _______,
-       _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
+    LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
          M_DQT, _______, _______, _______,M_ARROW_RS,M_ARROW_LD,_______,_______,_______,_______,M_ARROW_RD,KC_BSLS,KC_PIPE, KC_SLSH,   M_CMT, _______,
                                   _______, _______, _______, TD(D_QT), TD(D_EQ), _______, _______, _______, _______, _______
      ),
@@ -115,10 +115,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_SYS] = LAYOUT(
-       _______, LGUI(LSFT(KC_Q)),  LN_WEB, _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP  ,           _______  ,             _______,             _______,          _______, _______,
-       _______, LGUI(LSFT(KC_A)), LN_SHOT, _______, LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK, KC_MEDIA_PLAY_PAUSE, KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , _______,
-       _______,          _______, _______, _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), KC_AUDIO_MUTE      ,             _______,             _______,          _______, _______,
-                                     KC_CAPS_LOCK ,          _______,          _______, _______, _______, _______, _______,           _______,            _______ , KC_ASTG
+       _______, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP  ,           _______  ,             _______,             _______,          _______, _______,
+       _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK, KC_MEDIA_PLAY_PAUSE, KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , _______,
+       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), KC_AUDIO_MUTE      ,             _______,             _______,          _______, _______,
+                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, _______, _______,           _______,            _______ , KC_ASTG
      ),
 /*
  * MOV
@@ -135,9 +135,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_MOVE] = LAYOUT(
-       _______,     KC_F9,    KC_F10,    KC_F11 ,    KC_F12,_______   ,                                      KC_PGUP         ,   KC_HOME,   KC_UP,  KC_END, _______, LCTL(KC_PLUS),
-       _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3),LGUI(KC_4),LGUI(KC_5),                                      KC_PGDN         ,   KC_LEFT, KC_DOWN,KC_RIGHT, _______, LCTL(KC_MINUS),
-       _______,LCTL(KC_Z),LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K), _______,_______,_______,_______     ,LGUI(LSFT(KC_R)),   LGUI(KC_S), LGUI(KC_B), _______, _______, LGUI(LSFT(KC_M)),
+       _______,     KC_F9,    KC_F10,    KC_F11 ,    KC_F12,_______   ,                                      KC_PGUP         ,   KC_HOME,   KC_UP,  KC_END, LGUI(KC_M), LCTL(KC_PLUS),
+       _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3),LGUI(KC_4),LGUI(KC_5),                                      KC_PGDN         ,   KC_LEFT, KC_DOWN,KC_RIGHT, LCTL(KC_F), LCTL(KC_MINUS),
+       _______,LCTL(KC_Z),LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K), _______,_______,_______,_______     ,LGUI(LSFT(KC_R)),   LGUI(KC_S), LGUI(KC_B), LGUI(KC_DOT), LGUI(KC_SLSH), LGUI(LSFT(KC_M)),
        _______ ,   _______,  _______ , _______,_______,_______,LCTL(KC_SPC),         _______, LGUI(KC_9), LGUI(KC_0)
      ),
         
