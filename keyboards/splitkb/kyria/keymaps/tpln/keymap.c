@@ -644,15 +644,38 @@ void print_layer(const char* name, uint8_t spaces_before, uint8_t spaces_after, 
 #endif
 }
 
+// Enables or disables autoshift depending on the layer.
+void control_autoshift(int8_t current_layer) {
+        static int8_t prev_layer = L_BASE;
+        if (prev_layer != current_layer) {
+                if (current_layer == L_GAMING) {
+                        autoshift_disable();
+                }
+                else {
+                        autoshift_enable();
+                }
+        }
+        prev_layer = current_layer;
+        return;
+}
+
 bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 
         static int8_t c = 0;
         static int8_t i = 1;
+ 
 #ifdef DISPLAY_MODS
         uint8_t mods = get_mods();
 #endif
         if (is_keyboard_master()) {
-                switch (get_highest_layer(layer_state|default_layer_state)) {
+                int8_t current_layer = get_highest_layer(layer_state|default_layer_state);
+
+                // Control autoshift depending on the layer. This would be much nicer
+                // to call from a hook that gets called when the layer changes. But
+                // did not find such a hook so far, and this works OK, so...
+                control_autoshift(current_layer);
+                
+                switch (current_layer) {
                 case L_BASE:
                         print_layer(PSTR(" BASE "), 2, 12, 0);
                         break;
