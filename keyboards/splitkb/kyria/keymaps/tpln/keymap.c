@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 
 // TODO
-// * Mouse
+// * Doubletap left thumb (hold to move) = switch to move layer, double tap back to base
 
 // Layers:
 // 0 = base
@@ -135,10 +135,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_MOVE] = LAYOUT(
-       _______,     KC_F9,    KC_F10,    KC_F11 ,    KC_F12,_______   ,                                      KC_PGUP         ,   KC_HOME,   KC_UP,  KC_END, LGUI(KC_M), LCTL(KC_PLUS),
-       _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3),LGUI(KC_4),LGUI(KC_5),                                      KC_PGDN         ,   KC_LEFT, KC_DOWN,KC_RIGHT, LCTL(KC_F), LCTL(KC_MINUS),
-       _______,LCTL(KC_Z),LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K), _______,_______,_______,_______     ,LGUI(LSFT(KC_R)),   LGUI(KC_S), LGUI(KC_B), LGUI(KC_DOT), LGUI(KC_SLSH), LGUI(LSFT(KC_M)),
-       _______ ,   _______,  _______ , _______,_______,_______,LCTL(KC_SPC),         _______, LGUI(KC_9), LGUI(KC_0)
+       _______,     KC_F9,    KC_F10,    KC_F11,    KC_F12,      _______,                                        KC_PGUP         ,   KC_HOME   , KC_UP     ,       KC_END, LGUI(KC_M)   , LCTL(KC_PLUS),
+       _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3),LGUI(KC_4),LGUI(KC_5)   ,                                        KC_PGDN         ,   KC_LEFT   , KC_DOWN   ,     KC_RIGHT, LCTL(KC_F)   , LCTL(KC_MINUS),
+       _______,LCTL(KC_Z),LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K)   ,     _______,_______,_______,KC_MINUS  ,LGUI(LSFT(KC_R)),   LGUI(KC_S), LGUI(KC_B), LGUI(KC_DOT), LGUI(KC_SLSH), LGUI(LSFT(KC_M)),
+       _______,   _______,  _______ ,   _______,   _______,LGUI(KC_SCLN),LCTL(KC_SPC),        _______,LGUI(KC_9),LGUI(KC_0)
      ),
         
 /*
