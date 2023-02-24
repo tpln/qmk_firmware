@@ -1,3 +1,4 @@
+#include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 
 // TODO
@@ -24,7 +25,6 @@
 #define LN_TERM LGUI(KC_H)
 #define LN_SHOT LGUI(LSFT(KC_S))
 
-
 enum tap_dance_codes {
  D_OB = 0, // open brackets, ({[
  D_CB, // closing brackets, )}]
@@ -50,13 +50,31 @@ enum {
      MORE_TAPS
 };
 
+#ifdef TPLN_MACROS
 enum custom_keycodes {
-  M_ARROW_RD = SAFE_RANGE, //=>
-  M_ARROW_LD, //<=
-  M_ARROW_RS, //->
-  M_DQT, //""
- M_CMT, // //
+    M_ARROW_RD = SAFE_RANGE,  //=>
+    M_ARROW_LD,               //<=
+    M_ARROW_RS,               //->
+    M_DQT,                    //""
+    M_CMT,                    // //
 };
+#else
+#    define M_ARROW_RD _______
+#    define M_ARROW_LD _______
+#    define M_ARROW_RS _______
+#    define M_DQT _______
+#    define M_CMT _______
+
+#endif
+
+#ifdef TPLN_SWITCH_LAYER
+#    define TPLN_MO_L_SWITCH MO(L_SWITCH)
+#else
+#    define TPLN_MO_L_SWITCH _______
+#endif
+
+
+#include "combos.h"
 
 static tap dance_state[8];
 
@@ -86,7 +104,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_BASE] = LAYOUT(
     TD(D_TAB), KC_Q   , KC_W  , KC_E   , KC_R   , KC_T   ,                                                        KC_Y                , KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
     TD(D_OB), KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                                                         KC_H                , KC_J   , KC_K   , KC_L   , KC_SCLN, TD(D_CB),
-    TD(D_QT), KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_LALT  , MO(L_MOUSE), MO(L_SWITCH),MO(L_SYS)        , KC_N                , KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
+    TD(D_QT), KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_LALT  , MO(L_MOUSE), TPLN_MO_L_SWITCH,MO(L_SYS)        , KC_N                , KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
     KC_LSFT, KC_LGUI, KC_LCTL , KC_SPC, MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
@@ -160,8 +178,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
   KC_CAPS_LOCK, _______, _______, _______, _______, _______,  KC_ESC, KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______,
                                     KC_F9,   KC_F5, _______,  KC_SPC, KC_LSFT, _______, _______, _______, _______, _______
-     ),
+    ),
                 
+/*
+ * Layer template
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |        |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [L_MOUSE] = LAYOUT(
+                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_UP  , KC_MS_BTN1, KC_MS_UP  , KC_MS_BTN2 , _______, _______,
+                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN, KC_MS_RIGHT, _______, _______,
+                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ ,      _______,    _______,   _______ ,     _______, _______, _______,
+                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    )
+
+    #ifdef TPLN_SWITCH_LAYER
+    ,
 /*
  * SWITCH
  *
@@ -182,28 +223,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
      ),
-
-/*
- * Layer template
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |        |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [L_MOUSE] = LAYOUT(
-                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_UP  , KC_MS_BTN1, KC_MS_UP  , KC_MS_BTN2 , _______, _______,
-                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN, KC_MS_RIGHT, _______, _______,
-                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ ,      _______,    _______,   _______ ,     _______, _______, _______,
-                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-    ),
+#endif
     
+
 // /*
 //  * Layer template
 //  *
@@ -573,6 +595,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 }
 
 
+#ifdef TPLN_MACROS
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
   case M_ARROW_RD: //=>
@@ -603,6 +626,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
+#endif
 
 
 /* The default OLED and rotary encoder code can be found at the bottom of qmk_firmware/keyboards/splitkb/kyria/rev1/rev1.c
@@ -661,9 +685,11 @@ void control_autoshift(int8_t current_layer) {
 
 bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 
+#ifdef TPLN_SWITCH_LAYER
         static int8_t c = 0;
         static int8_t i = 1;
- 
+#endif
+        
 #ifdef DISPLAY_MODS
         uint8_t mods = get_mods();
 #endif
@@ -694,12 +720,14 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
                 case L_MOUSE:
                         print_layer(PSTR(" MOUSE "), 12, 0, 5);
                         break;
+#ifdef TPLN_SWITCH_LAYER
                 case L_SWITCH:
                         c = c + i;
                         if (c % 5 == 0) {
                                 i = -i;
                         }
                         print_layer(PSTR(" SWITCH "), 6, 6, c % 6);
+#endif
                         break;
                 }
 #ifdef DISPLAY_MODS
