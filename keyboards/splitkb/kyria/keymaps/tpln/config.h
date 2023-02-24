@@ -51,4 +51,4 @@
 
 #define HOLD_ON_OTHER_KEY_PRESS
 
-#define COMBO_COUNT 10
+#define COMBO_COUNT 12
