@@ -332,6 +332,7 @@ void dance_finished_double(qk_tap_dance_state_t *state, void *user_data,
          }
          break;
       default:
+         // Do nothing
          count = 0;
          break;
    }

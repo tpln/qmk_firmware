@@ -46,7 +46,7 @@
 
 #define DISPLAY_MODS
 //#define DISPLAY_FANCY_LAYER
-//#define TPLN_MACROS
+#define TPLN_MACROS
 #define TPLN_SWITCH_LAYER
 //#define TPLN_HOME_ROW_BRACKETS
 
