@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "keycode.h"
-#include "keycode_legacy.h"
+//#include "keycode_legacy.h"
 #include "process_auto_shift.h"
 #include "process_combo.h"
 #include "quantum_keycodes.h"
@@ -164,7 +164,7 @@ LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    
        _______, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), _______,
        _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , _______,
        _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), KC_AUDIO_MUTE         ,             _______   ,             _______,          _______, _______,
-                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, _______, _______,           _______,               _______ , KC_ASTG
+                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, _______, _______,           _______,               _______ , AS_TOGG
      ),
 /*
  * MOV
@@ -276,9 +276,9 @@ LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    
 //     ),
 };
 
-uint8_t dance_step(qk_tap_dance_state_t *state);
+uint8_t dance_step(tap_dance_state_t *state);
 
-uint8_t dance_step(qk_tap_dance_state_t *state) {
+uint8_t dance_step(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed) return SINGLE_TAP;
         else return SINGLE_HOLD;
@@ -291,7 +291,7 @@ uint8_t dance_step(qk_tap_dance_state_t *state) {
     return MORE_TAPS;
 }
 
-void on_dance(qk_tap_dance_state_t *state, void *user_data, uint16_t code) {
+void on_dance(tap_dance_state_t *state, void *user_data, uint16_t code) {
     if(state->count == 3) {
         tap_code16(code);
         tap_code16(code);
@@ -302,7 +302,7 @@ void on_dance(qk_tap_dance_state_t *state, void *user_data, uint16_t code) {
     }
 }
 
-void dance_finished_double(qk_tap_dance_state_t *state, void *user_data,
+void dance_finished_double(tap_dance_state_t *state, void *user_data,
                     int dance_id,
                     uint16_t single_tap_code,
                     uint16_t hold_code,
@@ -346,7 +346,7 @@ void dance_finished_double(qk_tap_dance_state_t *state, void *user_data,
 
 }
 
-void dance_finished_tap_or_hold(qk_tap_dance_state_t *state, void *user_data,
+void dance_finished_tap_or_hold(tap_dance_state_t *state, void *user_data,
                     int dance_id,
                     uint16_t tap_code,
                     uint16_t hold_code) {
@@ -354,7 +354,7 @@ void dance_finished_tap_or_hold(qk_tap_dance_state_t *state, void *user_data,
    dance_finished_double(state, user_data, dance_id, tap_code, hold_code, tap_code, tap_code);
 }
 
-void dance_reset(qk_tap_dance_state_t *state, void *user_data,
+void dance_reset(tap_dance_state_t *state, void *user_data,
                  int dance_id) {
     wait_ms(10);
     uint16_t code = active_dance_keys[dance_id];
@@ -368,33 +368,33 @@ void dance_reset(qk_tap_dance_state_t *state, void *user_data,
 
 // Quotes dance: '"`
 
-void on_dance_quotes(qk_tap_dance_state_t *state, void *user_data);
-void dance_quotes_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_quotes_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_quotes(tap_dance_state_t *state, void *user_data);
+void dance_quotes_finished(tap_dance_state_t *state, void *user_data);
+void dance_quotes_reset(tap_dance_state_t *state, void *user_data);
  
-void on_dance_quotes(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_quotes(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_QUOTE);
 }
 
 
-void dance_quotes_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_quotes_finished(tap_dance_state_t *state, void *user_data) {
         dance_finished_double(state, user_data, D_QT, KC_QUOTE, KC_GRAVE, KC_DQUO, KC_QUOTE);
 }
 
-void dance_quotes_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_quotes_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state, user_data, D_QT);
 }
 
 // Tab dance
-void on_dance_tab(qk_tap_dance_state_t *state, void *user_data);
-void dance_tab_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_tab_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_tab(tap_dance_state_t *state, void *user_data);
+void dance_tab_finished(tap_dance_state_t *state, void *user_data);
+void dance_tab_reset(tap_dance_state_t *state, void *user_data);
 
-void on_dance_tab(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_tab(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_TAB);
 }
 
-void dance_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_tab_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_double(state,
                          user_data,
                          D_TAB,
@@ -404,72 +404,72 @@ void dance_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
                          KC_TAB);
 }
 
-void dance_tab_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_tab_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state,
                user_data,
                D_TAB);
 }
 
 // open brackets dance
-void on_dance_open_brackets(qk_tap_dance_state_t *state, void *user_data);
-void dance_open_brackets_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_open_brackets_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_open_brackets(tap_dance_state_t *state, void *user_data);
+void dance_open_brackets_finished(tap_dance_state_t *state, void *user_data);
+void dance_open_brackets_reset(tap_dance_state_t *state, void *user_data);
 
-void on_dance_open_brackets(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_open_brackets(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_LPRN);
 }
 
-void dance_open_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_open_brackets_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_double(state,
                          user_data,
                          D_OB,
                          KC_LPRN,
                          KC_LCBR,
                          KC_LPRN,
-                         KC_LBRACKET);
+                         KC_LBRC);
 }
 
-void dance_open_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_open_brackets_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state,
                user_data,
                D_OB);
 }
 
 //close brackets dance
-void on_dance_close_brackets(qk_tap_dance_state_t *state, void *user_data);
-void dance_close_brackets_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_close_brackets_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_close_brackets(tap_dance_state_t *state, void *user_data);
+void dance_close_brackets_finished(tap_dance_state_t *state, void *user_data);
+void dance_close_brackets_reset(tap_dance_state_t *state, void *user_data);
 
-void on_dance_close_brackets(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_close_brackets(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_RPRN);
 }
 
-void dance_close_brackets_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_close_brackets_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_double(state,
                          user_data,
                          D_CB,
                          KC_RPRN,
                          KC_RCBR,
                          KC_RPRN,
-                         KC_RBRACKET);
+                         KC_RBRC);
 }
 
-void dance_close_brackets_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_close_brackets_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state,
                user_data,
                D_CB);
 }
 
 // equal dance
-void on_dance_equal(qk_tap_dance_state_t *state, void *user_data);
-void dance_equal_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_equal_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_equal(tap_dance_state_t *state, void *user_data);
+void dance_equal_finished(tap_dance_state_t *state, void *user_data);
+void dance_equal_reset(tap_dance_state_t *state, void *user_data);
 
-void on_dance_equal(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_equal(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_EQUAL);
 }
 
-void dance_equal_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_equal_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_tap_or_hold(state,
                               user_data,
                               D_EQ,
@@ -477,22 +477,22 @@ void dance_equal_finished(qk_tap_dance_state_t *state, void *user_data) {
                               KC_PLUS);
 }
 
-void dance_equal_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_equal_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state,
                user_data,
                D_EQ);
 }
 
 // dash dance
-void on_dance_dash(qk_tap_dance_state_t *state, void *user_data);
-void dance_dash_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_dash_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_dash(tap_dance_state_t *state, void *user_data);
+void dance_dash_finished(tap_dance_state_t *state, void *user_data);
+void dance_dash_reset(tap_dance_state_t *state, void *user_data);
 
-void on_dance_dash(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_dash(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_DASH);
 }
 
-void dance_dash_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_dash_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_double(state,
                          user_data,
                          D_DSH,
@@ -502,22 +502,22 @@ void dance_dash_finished(qk_tap_dance_state_t *state, void *user_data) {
                          KC_TILD);
 }
 
-void dance_dash_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_dash_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state,
                user_data,
                D_DSH);
 }
 
 // Run dance
-void on_dance_run(qk_tap_dance_state_t *state, void *user_data);
-void dance_run_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_run_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_run(tap_dance_state_t *state, void *user_data);
+void dance_run_finished(tap_dance_state_t *state, void *user_data);
+void dance_run_reset(tap_dance_state_t *state, void *user_data);
 
-void on_dance_run(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_run(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, LGUI(KC_N));
 }
 
-void dance_run_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_run_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_tap_or_hold(state,
                               user_data,
                               D_RUN,
@@ -525,7 +525,7 @@ void dance_run_finished(qk_tap_dance_state_t *state, void *user_data) {
                               LCTL(LGUI(KC_N)));
 }
 
-void dance_run_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_run_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state,
                user_data,
                D_RUN);
@@ -537,13 +537,13 @@ void dance_run_reset(qk_tap_dance_state_t *state, void *user_data) {
 
 #ifdef TPLN_HOME_ROW_BRACKETS
 // F dance
-void on_dance_f(qk_tap_dance_state_t *state, void *user_data);
-void dance_f_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_f_reset(qk_tap_dance_state_t *state, void *user_data);
-void on_dance_f(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_f(tap_dance_state_t *state, void *user_data);
+void dance_f_finished(tap_dance_state_t *state, void *user_data);
+void dance_f_reset(tap_dance_state_t *state, void *user_data);
+void on_dance_f(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_F);
 }
-void dance_f_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_f_finished(tap_dance_state_t *state, void *user_data) {
         dance_finished(state,
                        user_data,
                        D_F,
@@ -552,7 +552,7 @@ void dance_f_finished(qk_tap_dance_state_t *state, void *user_data) {
                        KC_F,
                        KC_LPRN);
 }
-void dance_f_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_f_reset(tap_dance_state_t *state, void *user_data) {
         dance_reset(state,
                     user_data,
                     D_F,
@@ -563,13 +563,13 @@ void dance_f_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // D dance
-void on_dance_d(qk_tap_dance_state_t *state, void *user_data);
-void dance_d_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_d_reset(qk_tap_dance_state_t *state, void *user_data);
-void on_dance_d(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_d(tap_dance_state_t *state, void *user_data);
+void dance_d_finished(tap_dance_state_t *state, void *user_data);
+void dance_d_reset(tap_dance_state_t *state, void *user_data);
+void on_dance_d(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_D);
 }
-void dance_d_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_d_finished(tap_dance_state_t *state, void *user_data) {
         dance_finished(state,
                        user_data,
                        D_D,
@@ -578,7 +578,7 @@ void dance_d_finished(qk_tap_dance_state_t *state, void *user_data) {
                        KC_D,
                        KC_LCBR);
 }
-void dance_d_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_d_reset(tap_dance_state_t *state, void *user_data) {
         dance_reset(state,
                     user_data,
                     D_D,
@@ -589,13 +589,13 @@ void dance_d_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // S dance
-void on_dance_s(qk_tap_dance_state_t *state, void *user_data);
-void dance_s_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_s_reset(qk_tap_dance_state_t *state, void *user_data);
-void on_dance_s(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_s(tap_dance_state_t *state, void *user_data);
+void dance_s_finished(tap_dance_state_t *state, void *user_data);
+void dance_s_reset(tap_dance_state_t *state, void *user_data);
+void on_dance_s(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_S);
 }
-void dance_s_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_s_finished(tap_dance_state_t *state, void *user_data) {
         dance_finished(state,
                        user_data,
                        D_S,
@@ -604,7 +604,7 @@ void dance_s_finished(qk_tap_dance_state_t *state, void *user_data) {
                        KC_S,
                        KC_LEFT_BRACKET);
 }
-void dance_s_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_s_reset(tap_dance_state_t *state, void *user_data) {
         dance_reset(state,
                     user_data,
                     D_S,
@@ -615,13 +615,13 @@ void dance_s_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // J
-void on_dance_j(qk_tap_dance_state_t *state, void *user_data);
-void dance_j_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_j_reset(qk_tap_dance_state_t *state, void *user_data);
-void on_dance_j(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_j(tap_dance_state_t *state, void *user_data);
+void dance_j_finished(tap_dance_state_t *state, void *user_data);
+void dance_j_reset(tap_dance_state_t *state, void *user_data);
+void on_dance_j(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_J);
 }
-void dance_j_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_j_finished(tap_dance_state_t *state, void *user_data) {
         dance_finished(state,
                        user_data,
                        D_J,
@@ -630,7 +630,7 @@ void dance_j_finished(qk_tap_dance_state_t *state, void *user_data) {
                        KC_J,
                        KC_RPRN);
 }
-void dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_j_reset(tap_dance_state_t *state, void *user_data) {
         dance_reset(state,
                     user_data,
                     D_J,
@@ -641,13 +641,13 @@ void dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // K dance
-void on_dance_k(qk_tap_dance_state_t *state, void *user_data);
-void dance_k_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_k_reset(qk_tap_dance_state_t *state, void *user_data);
-void on_dance_k(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_k(tap_dance_state_t *state, void *user_data);
+void dance_k_finished(tap_dance_state_t *state, void *user_data);
+void dance_k_reset(tap_dance_state_t *state, void *user_data);
+void on_dance_k(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_K);
 }
-void dance_k_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_k_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_double(state, user_data,
                          D_K,
                          KC_K,
@@ -656,18 +656,18 @@ void dance_k_finished(qk_tap_dance_state_t *state, void *user_data) {
                          KC_RCBR);
 );
 }
-void dance_k_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_k_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state, user_data, D_K);
 }
 
 // L dance
-void on_dance_l(qk_tap_dance_state_t *state, void *user_data);
-void dance_l_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_l_reset(qk_tap_dance_state_t *state, void *user_data);
-void on_dance_l(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_l(tap_dance_state_t *state, void *user_data);
+void dance_l_finished(tap_dance_state_t *state, void *user_data);
+void dance_l_reset(tap_dance_state_t *state, void *user_data);
+void on_dance_l(tap_dance_state_t *state, void *user_data) {
     on_dance(state, user_data, KC_L);
 }
-void dance_l_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_l_finished(tap_dance_state_t *state, void *user_data) {
    dance_finished_double(state, user_data,
                          D_L,
                          KC_L,
@@ -675,13 +675,13 @@ void dance_l_finished(qk_tap_dance_state_t *state, void *user_data) {
                          KC_L,
                          KC_RIGHT_BRACKET);
 }
-void dance_l_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_l_reset(tap_dance_state_t *state, void *user_data) {
    dance_reset(state, user_data, D_L);
 }
 #endif
 
 // Dance table
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
         [D_QT] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_quotes, dance_quotes_finished, dance_quotes_reset),
         [D_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_tab, dance_tab_finished, dance_tab_reset),
         [D_OB] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_open_brackets, dance_open_brackets_finished, dance_open_brackets_reset),

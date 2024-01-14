@@ -1,2 +1,2 @@
 #!/bin/bash
-qmk flash -kb kyria -km tpln
+qmk flash -kb splitkb/kyria/rev1 -km tpln
