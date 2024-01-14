@@ -7,6 +7,8 @@
 #include QMK_KEYBOARD_H
 
 // TODO
+// * See https://github.com/qmk/qmk_firmware/blob/master/docs/feature_split_keyboard.md
+//   for sending data to the slave slide
 // * Synchronize sys-keys to match cmd+shift keys in i3 config
 // * Doubletap left thumb (hold to move) = switch to move layer, double tap back to base
 // * brackets:

@@ -11,6 +11,10 @@ const uint16_t PROGMEM combo_emacs_cancel[] = { KC_Z, KC_X, KC_C, KC_V, COMBO_EN
 const uint16_t PROGMEM combo_i3_focus_next[] = { KC_M, KC_COMM, KC_DOT, COMBO_END}; 
 const uint16_t PROGMEM combo_i3_prev_workspace[] = { KC_Y, KC_U, KC_I, COMBO_END}; 
 const uint16_t PROGMEM combo_i3_next_workspace[] = {KC_U, KC_I, KC_O, COMBO_END};
+const uint16_t PROGMEM combo_left_curly_brace[] = {KC_F, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_right_curly_brace[] = {KC_F, KC_K, COMBO_END};
+const uint16_t PROGMEM combo_left_bracket[] = {KC_F, KC_L, COMBO_END};
+const uint16_t PROGMEM combo_right_bracket[]     = {KC_F, KC_SCLN, COMBO_END};
 
 // Home-row modifier combos, ala https://jasoncarloscox.com/blog/combo-mods/
 // control 
@@ -45,7 +49,11 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo_emacs_focus, LGUI(KC_M)),
     COMBO(combo_i3_prev_workspace, LGUI(KC_9)),
     COMBO(combo_i3_next_workspace, LGUI(KC_0)),
-
+    COMBO(combo_left_curly_brace, KC_LEFT_CURLY_BRACE),
+    COMBO(combo_right_curly_brace, KC_RIGHT_CURLY_BRACE),
+    COMBO(combo_left_bracket, KC_LEFT_BRACKET),
+    COMBO(combo_right_bracket, KC_RIGHT_BRACKET),
+    
     COMBO(combo_left_ctrl, KC_LCTL),
     COMBO(combo_left_super, KC_LGUI),
     COMBO(combo_left_shift, KC_LSFT),

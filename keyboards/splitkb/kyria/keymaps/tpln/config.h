@@ -52,7 +52,7 @@
 
 #define HOLD_ON_OTHER_KEY_PRESS
 
-#define COMBO_COUNT 19
+#define COMBO_COUNT 23
 
 #define COMBO_TERM 25        // how quickly all combo keys must be pressed in succession to trigger
 #define COMBO_MUST_HOLD_MODS // if a combo triggers a modifier, only trigger when the combo is held
