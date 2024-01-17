@@ -16,18 +16,6 @@
 
 #pragma once
 
-#ifdef RGBLIGHT_ENABLE
-#    define RGBLIGHT_ANIMATIONS
-#    define RGBLIGHT_HUE_STEP  8
-#    define RGBLIGHT_SAT_STEP  8
-#    define RGBLIGHT_VAL_STEP  8
-#    define RGBLIGHT_LIMIT_VAL 150
-#endif
-
-// If you are using an Elite C rev3 on the slave side, uncomment the lines below:
-//#define SPLIT_USB_DETECT
-//#define NO_USB_STARTUP_CHECK
-
 
 #define TAPPING_TERM 180
 #define TAPPING_TERM_PER_KEY
@@ -42,7 +30,6 @@
 #define MOUSEKEY_WHEEL_DELAY 100
 
 #define DISPLAY_MODS
-//#define DISPLAY_FANCY_LAYER
 #define TPLN_MACROS
 #define TPLN_SWITCH_LAYER
 //#define TPLN_HOME_ROW_BRACKETS
@@ -52,8 +39,21 @@
 #define COMBO_COUNT 23
 
 #define COMBO_TERM 25        // how quickly all combo keys must be pressed in succession to trigger
-#define COMBO_MUST_HOLD_MODS // if a combo triggers a modifier, only trigger when the combo is held
+#define COMBO_MUST_HLD_MODS // if a combo triggers a modifier, only trigger when the combo is held
 #define COMBO_HOLD_TERM 175  // how long at least one of the combo keys must be held to trigger
 
 
+// For rev3 liatris based Kyria with per key RGB only. Requires modding rev3/info.json
+// to strip away the underglow leds
+#ifdef RGB_MATRIX_ENABLE
+#undef RGB_MATRIX_LED_COUNT // wrong in rev3/config.h
+#undef RGB_MATRIX_SPLIT // this too
+#    define RGB_MATRIX_LED_COUNT 50
+#    define RGB_MATRIX_SPLIT { 25, 25 }
+#    define RGB_MATRIX_VAL_STEP 8   // brightness step
+#    define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
+#    define ENABLE_RGB_MATRIX_CYCLE_UP_DOWN
+#endif
+
+#define ENCODER_RESOLUTION 2
 //#define RETRO_SHIFT 180

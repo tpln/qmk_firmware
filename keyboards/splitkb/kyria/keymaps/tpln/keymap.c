@@ -1,12 +1,18 @@
 #include <stdint.h>
 #include "keycode.h"
 //#include "keycode_legacy.h"
+#include "keycodes.h"
 #include "process_auto_shift.h"
 #include "process_combo.h"
 #include "quantum_keycodes.h"
+#include "print.h"
 #include QMK_KEYBOARD_H
 
 // TODO
+// * all controller specific code behind flags
+// * combo for switching in/out mouse layer - or double tap soimething?
+
+// 
 // * See https://github.com/qmk/qmk_firmware/blob/master/docs/feature_split_keyboard.md
 //   for sending data to the slave slide
 // * Synchronize sys-keys to match cmd+shift keys in i3 config
@@ -21,6 +27,16 @@
 //    * E.g. A and ; == ctrl when held, shifted when held longer than tapping term but nothing else pressed
 //    * Can not be part of combos
 //    * Or this https://jasoncarloscox.com/blog/combo-mods/
+
+#if CONVERT_TO == liatris
+#    define LIATRIS
+#else
+#    define AVR
+#endif
+
+#ifdef LIATRIS
+#define DISPLAY_FANCY_LAYER
+#endif
 
 // Layers:
 // 0 = base
@@ -132,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_BASE] = LAYOUT(
     TD(D_TAB), KC_Q   , KC_W  , KC_E   , KC_R   , KC_T   ,                                                     KC_Y, KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
     TD(D_OB), KC_A   ,  KC_S  , KC_D   , KC_F   , KC_G   ,                                                     KC_H, KC_J   , KC_K   , KC_L  , KC_SCLN, TD(D_CB),
-    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , MO(L_MOUSE), TPLN_MO_L_SWITCH,MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
+    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , KC_AUDIO_MUTE, TPLN_MO_L_SWITCH,MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
     KC_LSFT, KC_LGUI, KC_LCTL , KC_SPC, MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
@@ -141,7 +157,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [L_NUM] = LAYOUT(
 LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                       KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, _______,
-    LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
+LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0, TO(L_MOUSE),
          M_DQT, _______, _______, _______,M_ARROW_RS,M_ARROW_LD,_______,_______,_______,_______,M_ARROW_RD,KC_BSLS,KC_PIPE, KC_SLSH,   M_CMT, _______,
                                   _______, _______, _______, TD(D_QT), TD(D_EQ), _______, _______, _______, _______, _______
      ),
@@ -161,10 +177,10 @@ LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_SYS] = LAYOUT(
-       _______, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), _______,
-       _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , _______,
+       RGB_MODE_FORWARD, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), RGB_VAI,
+       RGB_TOG, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , RGB_VAD,
        _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), KC_AUDIO_MUTE         ,             _______   ,             _______,          _______, _______,
-                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, _______, _______,           _______,               _______ , AS_TOGG
+                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, TPLN_MO_L_SWITCH, _______,           _______,               _______ , AS_TOGG
      ),
 /*
  * MOV
@@ -223,10 +239,10 @@ LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_MOUSE] = LAYOUT(
-                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_UP  , KC_MS_BTN1, KC_MS_UP  , KC_MS_BTN2 , _______, _______,
-                       _______, _______, _______, _______, _______, _______,                                     KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN, KC_MS_RIGHT, _______, _______,
-                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ ,      _______,    _______,   _______ ,     _______, _______, _______,
-                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+                       _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_UP  ,   _______,  KC_MS_UP  ,    _______, _______, _______,
+                       _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN,KC_MS_RIGHT, _______, TO(L_BASE),
+                       _______, _______, _______, _______, _______, KC_MS_BTN1,_______   , TO(L_BASE), _______, _______, KC_MS_BTN2   ,   _______,   _______ ,     _______, _______, _______,
+                       _______, _______, _______, _______, _______, _______   ,KC_MS_BTN1, KC_MS_BTN2, _______, _______
     )
 
     #ifdef TPLN_SWITCH_LAYER
@@ -853,6 +869,18 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 #endif
                         break;
                 }
+#ifdef debug_RGB_MATRIX_ENABLE                
+                if (rgb_matrix_is_enabled()) {
+                        oled_write_P(PSTR("E1"), false );
+                }
+                else {
+                        oled_write_P(PSTR("E0"), false);
+                }
+                char mode[] = {'A', 0};
+                mode[0] = mode[0] + (char)rgb_matrix_get_mode();
+                oled_write_P(mode, false);
+#endif                        
+                //oled_write_P(PSTR("%d\n", rgb_matrix_get_mode()), false); 
 #ifdef DISPLAY_MODS
                 oled_write_P((mods & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("     "), false);
                 oled_write_P((mods & MOD_MASK_SHIFT) ? PSTR("SHIFT ") : PSTR("      "), false);
@@ -880,24 +908,161 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 #endif
 
 #ifdef ENCODER_ENABLE
-bool encoder_update_user(uint8_t index, bool clockwise) {
 
-    if (index == 0) {
+void encoder_left_default(bool clockwise) {
         // Volume control
         if (clockwise) {
-            tap_code(KC_VOLU);
+                tap_code(KC_VOLU);
         } else {
-            tap_code(KC_VOLD);
+                tap_code(KC_VOLD);
         }
-    } else if (index == 1) {
+}
+
+void encoder_right_default(bool clockwise) {
+        if (clockwise) {
+                //tap_code16(LCTL(KC_EQUAL));
+                tap_code16(KC_MS_WH_UP);
+        } else {
+                //tap_code16(LCTL(KC_MINUS));
+                tap_code16(KC_MS_WH_DOWN);
+        }        
+}
+
+void encoder_left_mouse_layer(bool clockwise) {
+
+        if (clockwise) {
+                tap_code16(KC_MS_RIGHT);
+        } else {
+                tap_code16(KC_MS_LEFT);
+        }
+}
+
+void encoder_right_mouse_layer(bool clockwise) {
         // Page up/Page down
         if (clockwise) {
-            tap_code(KC_PGDN);
+                tap_code16(KC_MS_UP);
         } else {
-            tap_code(KC_PGUP);
+                tap_code16(KC_MS_DOWN);
         }
-    }
-    return false;
 }
+
+void encoder_right_move_layer(bool clockwise) {
+
+        // Replace with something else if needed
+        encoder_right_default(clockwise);
+}
+
+void encoder_left_num_layer(bool clockwise) {
+        if (clockwise) {
+                tap_code(KC_RIGHT);
+        } else {
+                tap_code(KC_LEFT);
+        }
+}
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+
+        uprintf("encoder_update_user(%d, %d)\n", index, clockwise);
+        int8_t current_layer = get_highest_layer(layer_state|default_layer_state);
+
+        switch (index) {
+        case 0: // left half encoder
+                switch (current_layer) {
+                case L_MOUSE:
+                        encoder_left_mouse_layer(clockwise);
+                        break;
+                case L_NUM:
+                        encoder_left_num_layer(clockwise);
+                        break;
+                default:
+                        encoder_left_default(clockwise);
+                        break;                
+                };
+                break;
+        case 1: // right half encoder
+                switch (current_layer) {
+                case L_MOUSE:
+                        encoder_right_mouse_layer(clockwise);
+                        break;
+                case L_MOVE:
+                        encoder_right_move_layer(clockwise);
+                        break;
+                default:
+                        encoder_right_default(clockwise);
+                        break;                
+                };
+                break;
+        default:
+                return true;
+                break;
+        }
+        return false;
+}
+
 #endif
+
+void keyboard_post_init_user(void) {
+        #ifdef CONSOLE_ENABLE
+        debug_enable=true;
+        #endif
+        //debug_matrix=true;
+#ifdef RGB_MATRIX_ENABLE
+        rgb_matrix_enable_noeeprom(); // enables RGB, without saving settings
+        rgb_matrix_mode(0);
+        rgb_matrix_sethsv_noeeprom(HSV_BLUE);
+        #endif
+        /* rgb_matrix_set_color_all(0,0,0); // sets the color to red without saving */
+        /* rgb_matrix_set_color_all(0,0,0); // sets the color to red without saving */
+}
+
+#ifdef RGB_MATRIX_ENABLE
+// Per layer RGB color
+/* bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) { */
+
+/*         switch(get_highest_layer(layer_state|default_layer_state)) { */
+/*         case L_BASE: */
+/*                 rgb_matrix_set_color_all(RGB_BLACK); */
+/*                 break; */
+/*         case L_NUM: */
+/*                 rgb_matrix_set_color_all(RGB_YELLOW); */
+/*                 break; */
+/*         case L_MOVE: */
+/*                 rgb_matrix_set_color_all(RGB_CYAN); */
+/*                 break; */
+/*         case L_SYS: */
+/*                 rgb_matrix_set_color_all(RGB_GREEN); */
+/*                 break; */
+/*         case L_GAMING: */
+/*                 rgb_matrix_set_color_all(RGB_PURPLE); */
+/*                 break; */
+/*         default: */
+/*                 rgb_matrix_set_color_all(RGB_WHITE); */
+/*                 break; */
+/*         } */
+
+/*     return false; */
+/* } */
+#endif
+
+
+void set_powerled_on(bool on) {
+
+#ifdef LIATRIS
+  // Set our LED pin as output
+  setPinOutput(24);
+  if (on) {
+          writePinLow(24);
+  }
+  else {
+          // Turn the LED off
+          // (Due to technical reasons, high is off and low is on)
+          writePinHigh(24);
+  }
+#endif
+}
+
+void keyboard_pre_init_user(void) {
+        // bright light! bright light!
+        set_powerled_on(false);
+}
 
