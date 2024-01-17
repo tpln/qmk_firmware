@@ -177,9 +177,9 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_SYS] = LAYOUT(
-       RGB_MODE_FORWARD, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), RGB_VAI,
+       RGB_MODE_FORWARD, LGUI(LSFT(KC_Q)),  LN_WEB,          RGB_HUD,          RGB_HUI,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), RGB_VAI,
        RGB_TOG, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , RGB_VAD,
-       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), KC_AUDIO_MUTE         ,             _______   ,             _______,          _______, _______,
+       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), TO(L_MOUSE),            RGB_SPD   ,             RGB_SPI,         RGB_SAD, RGB_SAI,
                                               KC_CAPS_LOCK ,          _______,          _______, _______, _______, TPLN_MO_L_SWITCH, _______,           _______,               _______ , AS_TOGG
      ),
 /*
@@ -239,9 +239,9 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_MOUSE] = LAYOUT(
-                       _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_UP  ,   _______,  KC_MS_UP  ,    _______, _______, _______,
+                       _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_UP  ,    _______,  KC_MS_UP  ,    _______, _______, _______,
                        _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN,KC_MS_RIGHT, _______, TO(L_BASE),
-                       _______, _______, _______, _______, _______, KC_MS_BTN1,_______   , TO(L_BASE), _______, _______, KC_MS_BTN2   ,   _______,   _______ ,     _______, _______, _______,
+                       _______, _______, _______, _______, _______, KC_MS_BTN1,_______   , TO(L_BASE), _______, _______, KC_MS_BTN2   , TO(L_BASE),   _______ ,     _______, _______, _______,
                        _______, _______, _______, _______, _______, _______   ,KC_MS_BTN1, KC_MS_BTN2, _______, _______
     )
 
@@ -1008,8 +1008,8 @@ void keyboard_post_init_user(void) {
         //debug_matrix=true;
 #ifdef RGB_MATRIX_ENABLE
         rgb_matrix_enable_noeeprom(); // enables RGB, without saving settings
-        rgb_matrix_mode(0);
-        rgb_matrix_sethsv_noeeprom(HSV_BLUE);
+        rgb_matrix_mode(2);
+        //rgb_matrix_sethsv_noeeprom(HSV_BLUE);
         #endif
         /* rgb_matrix_set_color_all(0,0,0); // sets the color to red without saving */
         /* rgb_matrix_set_color_all(0,0,0); // sets the color to red without saving */
