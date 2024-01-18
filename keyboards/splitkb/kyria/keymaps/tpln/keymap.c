@@ -35,7 +35,7 @@
 #endif
 
 #ifdef LIATRIS
-#define DISPLAY_FANCY_LAYER
+//#define DISPLAY_FANCY_LAYER
 #endif
 
 // Layers:
@@ -49,7 +49,8 @@
 #define L_SYS 3
 #define L_GAMING 4
 #define L_MOUSE 5
-#define L_SWITCH 6
+#define L_LIGHTS 6
+#define L_SWITCH 7
 
 #define KC_DASH KC_MINUS
 
@@ -148,7 +149,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_BASE] = LAYOUT(
     TD(D_TAB), KC_Q   , KC_W  , KC_E   , KC_R   , KC_T   ,                                                     KC_Y, KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
     TD(D_OB), KC_A   ,  KC_S  , KC_D   , KC_F   , KC_G   ,                                                     KC_H, KC_J   , KC_K   , KC_L  , KC_SCLN, TD(D_CB),
-    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , KC_AUDIO_MUTE, TPLN_MO_L_SWITCH,MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
+    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , KC_AUDIO_MUTE, TO(L_LIGHTS),MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
     KC_LSFT, KC_LGUI, KC_LCTL , KC_SPC, MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
@@ -177,8 +178,8 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_SYS] = LAYOUT(
-       RGB_MODE_FORWARD, LGUI(LSFT(KC_Q)),  LN_WEB,          RGB_HUD,          RGB_HUI,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), RGB_VAI,
-       RGB_TOG, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , RGB_VAD,
+       _______, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), _______,
+       _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , RGB_VAD,
        _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), TO(L_MOUSE),            RGB_SPD   ,             RGB_SPI,         RGB_SAD, RGB_SAI,
                                               KC_CAPS_LOCK ,          _______,          _______, _______, _______, TPLN_MO_L_SWITCH, _______,           _______,               _______ , AS_TOGG
      ),
@@ -199,7 +200,7 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
     [L_MOVE] = LAYOUT(
        _______,     KC_F9,    KC_F10,    KC_F11,    KC_F12,      _______,                                        KC_PGUP         ,   KC_HOME   , KC_UP     ,       KC_END, LGUI(KC_M)   , LCTL(KC_PLUS),
        _______,LGUI(KC_1),LGUI(KC_2),LGUI(KC_3),LGUI(KC_4),LGUI(KC_5)   ,                                        KC_PGDN         ,   KC_LEFT   , KC_DOWN   ,     KC_RIGHT, LCTL(KC_F)   , LCTL(KC_MINUS),
-       _______,LCTL(KC_Z),LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K)   ,     _______,_______,_______,KC_MINUS  ,LGUI(LSFT(KC_R)),   LGUI(KC_S), LGUI(KC_B), LGUI(KC_DOT), LGUI(KC_SLSH), LGUI(LSFT(KC_M)),
+       _______,LCTL(KC_Z),LCTL(KC_W),LCTL(KC_U),LCTL(KC_Y),LCTL(KC_K)   ,     _______,_______,_______,  _______ ,LGUI(LSFT(KC_R)),   LGUI(KC_S), LGUI(KC_B), LGUI(KC_DOT), LGUI(KC_SLSH), LGUI(LSFT(KC_M)),
        _______,   _______,  _______ ,   _______,   _______,LGUI(KC_SCLN),LCTL(KC_SPC),        _______,LGUI(KC_9),LGUI(KC_0)
      ),
         
@@ -241,7 +242,7 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
     [L_MOUSE] = LAYOUT(
                        _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_UP  ,    _______,  KC_MS_UP  ,    _______, _______, _______,
                        _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN,KC_MS_RIGHT, _______, TO(L_BASE),
-                       _______, _______, _______, _______, _______, KC_MS_BTN1,_______   , TO(L_BASE), _______, _______, KC_MS_BTN2   , TO(L_BASE),   _______ ,     _______, _______, _______,
+                       _______, _______, _______, _______, _______, KC_MS_BTN1,_______   , _______, _______, _______, KC_MS_BTN2   , TO(L_BASE),   _______ ,     _______, _______, _______,
                        _______, _______, _______, _______, _______, _______   ,KC_MS_BTN1, KC_MS_BTN2, _______, _______
     )
 
@@ -266,6 +267,26 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
        _______,    TO(0),   TO(1),   TO(2),    TO(3),   TO(4),                                     TO(5), _______, _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+     ),
+/*
+ * LIGHTS
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |        |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [L_LIGHTS] = LAYOUT(
+                        RGB_MODE_FORWARD, LGUI(LCTL(LSFT(KC_F1))),LGUI(LCTL(LSFT(KC_F2))),LGUI(LCTL(LSFT(KC_F3))),LGUI(LCTL(LSFT(KC_F4))),LGUI(LCTL(LSFT(KC_F5))),LGUI(LCTL(LSFT(KC_F6))),LGUI(LCTL(LSFT(KC_F7))),LGUI(LCTL(LSFT(KC_F8))),LGUI(LCTL(LSFT(KC_F9))),LGUI(LCTL(LSFT(KC_F10))),_______,
+                _______,LGUI(LCTL(LSFT(KC_A))), LGUI(LCTL(LSFT(KC_S))), LGUI(LCTL(LSFT(KC_D))), LGUI(LCTL(LSFT(KC_F))),LGUI(LCTL(LSFT(KC_G))),                                       _______, _______, _______, _______, _______, _______,
+                _______, _______, _______, _______, _______, _______, _______, _______,TO(L_BASE), _______, _______, _______, _______, _______, _______, _______,
+                                  _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______
      ),
 #endif
     
@@ -859,6 +880,9 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
                 case L_MOUSE:
                         print_layer(PSTR(" MOUSE "), 12, 0, 5);
                         break;
+                case L_LIGHTS:
+                        print_layer(PSTR(" LIGHTS "), 12, 0, 6);
+                        break;
 #ifdef TPLN_SWITCH_LAYER
                 case L_SWITCH:
                         c = c + i;
@@ -946,6 +970,35 @@ void encoder_right_mouse_layer(bool clockwise) {
         }
 }
 
+void encoder_left_lights_layer(bool clockwise) {
+
+        if (clockwise) {
+                rgb_matrix_increase_sat_noeeprom();
+        } else {
+                rgb_matrix_decrease_sat_noeeprom();
+        }
+}
+
+void encoder_right_lights_layer(bool clockwise) {
+        // Page up/Page down
+        bool ctrl = get_mods() & MOD_MASK_CTRL;
+
+        if (!ctrl) {
+                if (clockwise) {
+                        rgb_matrix_increase_val_noeeprom();
+                } else {
+                        rgb_matrix_decrease_val_noeeprom();
+                }
+        }
+        else {
+                if (clockwise) {
+                        rgb_matrix_increase_hue_noeeprom();
+                } else {
+                        rgb_matrix_decrease_hue_noeeprom();
+                }
+        }
+}
+
 void encoder_right_move_layer(bool clockwise) {
 
         // Replace with something else if needed
@@ -974,6 +1027,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 case L_NUM:
                         encoder_left_num_layer(clockwise);
                         break;
+                case L_LIGHTS:
+                        encoder_left_lights_layer(clockwise);
+                        break;
                 default:
                         encoder_left_default(clockwise);
                         break;                
@@ -986,6 +1042,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                         break;
                 case L_MOVE:
                         encoder_right_move_layer(clockwise);
+                        break;
+                case L_LIGHTS:
+                        encoder_right_lights_layer(clockwise);
                         break;
                 default:
                         encoder_right_default(clockwise);
@@ -1010,7 +1069,7 @@ void keyboard_post_init_user(void) {
         rgb_matrix_enable_noeeprom(); // enables RGB, without saving settings
         rgb_matrix_mode(2);
         //rgb_matrix_sethsv_noeeprom(HSV_BLUE);
-        #endif
+#endif
         /* rgb_matrix_set_color_all(0,0,0); // sets the color to red without saving */
         /* rgb_matrix_set_color_all(0,0,0); // sets the color to red without saving */
 }
