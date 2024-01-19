@@ -826,18 +826,52 @@ void print_layer(const char* name, uint8_t spaces_before, uint8_t spaces_after, 
 #endif
 }
 
+void set_led_color_from_layer(int8_t current_layer) {
+
+        switch(current_layer) {
+        case L_BASE:
+                rgb_matrix_set_color_all(RGB_BLACK);
+                break;
+        case L_NUM:
+                rgb_matrix_set_color_all(RGB_YELLOW);
+                break;
+        case L_MOVE:
+                rgb_matrix_set_color_all(RGB_CYAN);
+                break;
+        case L_SYS:
+                rgb_matrix_set_color_all(RGB_GREEN);
+                break;
+        case L_GAMING:
+                rgb_matrix_set_color_all(RGB_PURPLE);
+                break;
+        default:
+                rgb_matrix_set_color_all(RGB_WHITE);
+                break;
+        }
+}
+
+void on_layer_changed(int8_t prev_layer, int8_t current_layer) {
+
+        #ifdef RGB_MATRIX_ENABLE
+        set_led_color_from_layer(current_layer);
+        #endif
+        
+        if (current_layer == L_GAMING) {
+                autoshift_disable();
+                combo_disable();
+        }
+        else {
+                autoshift_enable();
+                combo_enable();
+        }
+}
+
 // Enables or disables autoshift depending on the layer.
-void control_autoshift(int8_t current_layer) {
+void check_for_layer_change(void) {
         static int8_t prev_layer = L_BASE;
+        int8_t current_layer = get_highest_layer(layer_state|default_layer_state);
         if (prev_layer != current_layer) {
-                if (current_layer == L_GAMING) {
-                        autoshift_disable();
-                        combo_disable();
-                }
-                else {
-                        autoshift_enable();
-                        combo_enable();
-                }
+                on_layer_changed(prev_layer, current_layer);
         }
         prev_layer = current_layer;
         return;
@@ -855,11 +889,7 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 #endif
         if (is_keyboard_master()) {
                 int8_t current_layer = get_highest_layer(layer_state|default_layer_state);
-
-                // Control autoshift depending on the layer. This would be much nicer
-                // to call from a hook that gets called when the layer changes. But
-                // did not find such a hook so far, and this works OK, so...
-                control_autoshift(current_layer);
+                check_for_layer_change();
                 
                 switch (current_layer) {
                 case L_BASE:
@@ -972,15 +1002,26 @@ void encoder_right_mouse_layer(bool clockwise) {
 
 void encoder_left_lights_layer(bool clockwise) {
 
-        if (clockwise) {
-                rgb_matrix_increase_sat_noeeprom();
-        } else {
-                rgb_matrix_decrease_sat_noeeprom();
+        bool ctrl = get_mods() & MOD_MASK_CTRL;
+        if (!ctrl) {
+                if (clockwise) {
+                        rgb_matrix_increase_sat_noeeprom();
+                } else {
+                        rgb_matrix_decrease_sat_noeeprom();
+                }
+        }
+        else {
+                if (clockwise) {
+                        rgb_matrix_increase_speed_noeeprom();
+                } else {
+                        rgb_matrix_decrease_speed_noeeprom();
+                }
+
         }
 }
 
 void encoder_right_lights_layer(bool clockwise) {
-        // Page up/Page down
+
         bool ctrl = get_mods() & MOD_MASK_CTRL;
 
         if (!ctrl) {
