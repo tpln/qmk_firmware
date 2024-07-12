@@ -149,7 +149,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_BASE] = LAYOUT(
     TD(D_TAB), KC_Q   , KC_W  , KC_E   , KC_R   , KC_T   ,                                                     KC_Y, KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
     TD(D_OB), KC_A   ,  KC_S  , KC_D   , KC_F   , KC_G   ,                                                     KC_H, KC_J   , KC_K   , KC_L  , KC_SCLN, TD(D_CB),
-    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , KC_AUDIO_MUTE, TO(L_LIGHTS),MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
+    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , TO(L_MOUSE), TO(L_LIGHTS),MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
     KC_LSFT, KC_LGUI, KC_LCTL , KC_SPC, MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
@@ -180,7 +180,7 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
     [L_SYS] = LAYOUT(
        _______, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), _______,
        _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , RGB_VAD,
-       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), TO(L_MOUSE),            RGB_SPD   ,             RGB_SPI,         RGB_SAD, RGB_SAI,
+       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), _______               ,             RGB_SPD   ,             RGB_SPI,         RGB_SAD, RGB_SAI,
                                               KC_CAPS_LOCK ,          _______,          _______, _______, _______, TPLN_MO_L_SWITCH, _______,           _______,               _______ , AS_TOGG
      ),
 /*
@@ -221,8 +221,8 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
     [L_GAMING] = LAYOUT(
         KC_TAB, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
        _______, _______, _______,    KC_D,    KC_F, _______,                                     _______,    KC_J,    KC_K, _______, _______, _______,
-  KC_CAPS_LOCK, _______, _______, _______, _______, _______,  KC_ESC, KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______,
-                                    KC_F9,   KC_F5, _______,  KC_SPC, KC_LSFT, _______, _______, _______, _______, _______
+  KC_CAPS_LOCK, _______, _______, _______, _______, _______,  KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                                    KC_F9,   KC_F5, _______,  KC_SPC, KC_LSFT, _______, KC_ENTER, KC_ESC, _______, _______
     ),
                 
 /*
@@ -240,10 +240,10 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_MOUSE] = LAYOUT(
-                       _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_UP  ,    _______,  KC_MS_UP  ,    _______, _______, _______,
-                       _______, _______, _______, _______, _______, _______,                                             KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN,KC_MS_RIGHT, _______, TO(L_BASE),
-                       _______, _______, _______, _______, _______, KC_MS_BTN1,_______   , _______, _______, _______, KC_MS_BTN2   , TO(L_BASE),   _______ ,     _______, _______, _______,
-                       _______, _______, _______, _______, _______, _______   ,KC_MS_BTN1, KC_MS_BTN2, _______, _______
+                       _______   , _______, _______   , KC_MS_UP  , _______    , KC_MS_WH_UP  ,                                          KC_MS_WH_UP  ,    _______, KC_MS_UP  ,    _______, _______, _______,
+                       TO(L_BASE), _______, KC_MS_LEFT, KC_MS_DOWN, KC_MS_RIGHT, KC_MS_WH_DOWN,                                          KC_MS_WH_DOWN, KC_MS_LEFT, KC_MS_DOWN,KC_MS_RIGHT, _______, TO(L_BASE),
+                       _______   , _______, _______   , _______   , _______    , KC_MS_BTN1   ,_______   , TO(L_BASE), _______, _______, KC_MS_BTN2   , TO(L_BASE), _______    ,   _______, _______, _______,
+                       _______   , _______, _______   , _______   , _______    , _______      ,KC_MS_BTN1, KC_MS_BTN2, _______, _______
     )
 
     #ifdef TPLN_SWITCH_LAYER
@@ -852,9 +852,9 @@ void set_led_color_from_layer(int8_t current_layer) {
 
 void on_layer_changed(int8_t prev_layer, int8_t current_layer) {
 
-        #ifdef RGB_MATRIX_ENABLE
-        set_led_color_from_layer(current_layer);
-        #endif
+        //#ifdef RGB_MATRIX_ENABLE
+        //set_led_color_from_layer(current_layer);
+        //#endif
         
         if (current_layer == L_GAMING) {
                 autoshift_disable();
@@ -1063,7 +1063,8 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         case 0: // left half encoder
                 switch (current_layer) {
                 case L_MOUSE:
-                        encoder_left_mouse_layer(clockwise);
+                        //encoder_left_mouse_layer(clockwise);
+                        encoder_left_default(clockwise);
                         break;
                 case L_NUM:
                         encoder_left_num_layer(clockwise);
@@ -1079,7 +1080,8 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         case 1: // right half encoder
                 switch (current_layer) {
                 case L_MOUSE:
-                        encoder_right_mouse_layer(clockwise);
+                        //encoder_right_mouse_layer(clockwise);
+                        encoder_right_default(clockwise);
                         break;
                 case L_MOVE:
                         encoder_right_move_layer(clockwise);
