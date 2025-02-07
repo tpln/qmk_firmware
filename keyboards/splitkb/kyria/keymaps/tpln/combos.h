@@ -3,8 +3,24 @@
 // Two key combos are easily hit when typing. Don't use them!
 
 #include "keycode.h"
+#include "keycodes.h"
+#include "keymap_us.h"
 #include "quantum_keycodes.h"
 
+
+// XCV = switch emacs frame
+// ZXCV = emacs cancel, ctrl-g
+// M,. = i3 switch window
+// YUI = i3 prev workspace
+// UIO = i3 next workspace
+// FJ = {
+// FK = }
+// FL = [
+// F; = ]
+
+// FD / JK = ctrl
+// FS / JL = meta
+// FA / J; = shift
 
 const uint16_t PROGMEM combo_emacs_focus[] = { KC_X, KC_C, KC_V, COMBO_END}; 
 const uint16_t PROGMEM combo_emacs_cancel[] = { KC_Z, KC_X, KC_C, KC_V, COMBO_END}; 
