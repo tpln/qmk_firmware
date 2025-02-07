@@ -2,6 +2,7 @@
 #include "keycode.h"
 //#include "keycode_legacy.h"
 #include "keycodes.h"
+#include "keymap_us.h"
 #include "process_auto_shift.h"
 #include "process_combo.h"
 #include "quantum_keycodes.h"
@@ -102,6 +103,7 @@ enum custom_keycodes {
     M_ARROW_RS,               //->
     M_DQT,                    //""
     M_CMT,                    // //
+    M_KEEP_ALIVE
 };
 #else
 #    define M_ARROW_RD _______
@@ -123,6 +125,13 @@ enum custom_keycodes {
 
 static tap dance_state[8];
 
+static bool keep_alive = false;
+#define KEEP_ALIVE_KEYCODE KC_MS_BTN8
+
+
+void on_keep_alive_pressed(void);
+void periodical_hook(void);
+void keep_alive_function(void);
 
 // Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
 // The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
@@ -147,20 +156,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_BASE] = LAYOUT(
-    TD(D_TAB), KC_Q   , KC_W  , KC_E   , KC_R   , KC_T   ,                                                     KC_Y, KC_U   , KC_I   , KC_O   , KC_P   , TD(D_DSH),
-    TD(D_OB), KC_A   ,  KC_S  , KC_D   , KC_F   , KC_G   ,                                                     KC_H, KC_J   , KC_K   , KC_L  , KC_SCLN, TD(D_CB),
-    TD(D_QT), KC_Z   ,  KC_X  , KC_C   , KC_V   , KC_B   , KC_LALT  , TO(L_MOUSE), TO(L_LIGHTS),MO(L_SYS), KC_N, KC_M   , KC_COMM, KC_DOT , KC_SLSH, TD(D_EQ),
-    KC_LSFT, KC_LGUI, KC_LCTL , KC_SPC, MO(L_MOVE) , KC_BSPC     ,LT(L_NUM, KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
+    TD(D_TAB), KC_Q   , KC_W    , KC_E   , KC_R      , KC_T   ,                                                         KC_Y, KC_U          , KC_I   , KC_O                , KC_P   , TD(D_DSH),
+    TD(D_OB) , KC_A   , KC_S    , KC_D   , KC_F      , KC_G   ,                                                         KC_H, KC_J          , KC_K   , KC_L                , KC_SCLN, TD(D_CB),
+    TD(D_QT) , KC_Z   , KC_X    , KC_C   , KC_V      , KC_B   , KC_LALT, TO(L_MOUSE), TO(L_LIGHTS), MO(L_SYS),          KC_N, KC_M          , KC_COMM, KC_DOT              , KC_SLSH, TD(D_EQ),
+                                  KC_LSFT, KC_LGUI   , KC_LCTL, KC_SPC , MO(L_MOVE) , KC_BSPC     , LT(L_NUM , KC_ENT), MT(MOD_RCTL, KC_ESC), KC_LGUI, MT(MOD_LSFT, KC_DEL)
     ),
 /*
  * NUM
  *
  */
     [L_NUM] = LAYOUT(
-LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                       KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, _______,
-LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0, TO(L_MOUSE),
-         M_DQT, _______, _______, _______,M_ARROW_RS,M_ARROW_LD,_______,_______,_______,_______,M_ARROW_RD,KC_BSLS,KC_PIPE, KC_SLSH,   M_CMT, _______,
-                                  _______, _______, _______, TD(D_QT), TD(D_EQ), _______, _______, _______, _______, _______
+LALT(KC_SPACE),   KC_F1,   KC_F2,   KC_F3,     KC_F4,      KC_F5,                                           KC_F6,   KC_F7,   KC_F8,   KC_F9, KC_F10, _______,
+LGUI(KC_G)    ,    KC_1,    KC_2,    KC_3,      KC_4,       KC_5,                                            KC_6,    KC_7,    KC_8,    KC_9,   KC_0, TO(L_MOUSE),
+         M_DQT, _______, _______, _______,M_ARROW_RS, M_ARROW_LD, _______ ,  _______, _______, _______,M_ARROW_RD, KC_BSLS, KC_PIPE, KC_SLSH,  M_CMT, _______,
+                                  _______,   _______,    _______, TD(D_QT), TD(D_EQ), _______, _______,   _______, _______, _______
      ),
 
  /*
@@ -178,10 +187,10 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_SYS] = LAYOUT(
-       _______, LGUI(LSFT(KC_Q)),  LN_WEB,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), _______,
-       _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))) , RGB_VAD,
-       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN), _______               ,             RGB_SPD   ,             RGB_SPI,         RGB_SAD, RGB_SAI,
-                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, TPLN_MO_L_SWITCH, _______,           _______,               _______ , AS_TOGG
+  M_KEEP_ALIVE, LGUI(LSFT(KC_Q)), LN_WEB ,          _______,          _______,         LN_TERM,                                     KC_AUDIO_VOL_UP   , LALT(LGUI(LSFT(KC_U))), LALT(LGUI(LSFT(KC_F))),             _______, LGUI(LSFT(LCTL(KC_P))), _______,
+       _______, LGUI(LSFT(KC_A)), LN_SHOT, LGUI(LSFT(KC_D)), LGUI(LSFT(KC_F)),          _______,                                     KC_AUDIO_VOL_DOWN, KC_MEDIA_PREV_TRACK   , KC_MEDIA_PLAY_PAUSE   , KC_MEDIA_NEXT_TRACK, LALT(LGUI(LSFT(KC_L))), RGB_VAD,
+       _______, LGUI(LSFT(KC_Z)), _______,          _______, LGUI(LSFT(KC_P)), LGUI(LSFT(KC_B)), _______, _______, _______, _______,         TD(D_RUN),               _______ ,             RGB_SPD   ,             RGB_SPI,                RGB_SAD, RGB_SAI,
+                                              KC_CAPS_LOCK ,          _______,          _______, _______, _______, TPLN_MO_L_SWITCH,           _______,               _______ ,               _______ , AS_TOGG
      ),
 /*
  * MOV
@@ -219,10 +228,10 @@ LGUI(KC_G),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        
  *                        `----------------------------------'  `----------------------------------'
  */
     [L_GAMING] = LAYOUT(
-        KC_TAB, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-       _______, _______, _______,    KC_D,    KC_F, _______,                                     _______,    KC_J,    KC_K, _______, _______, _______,
+        KC_TAB, _______, _______, _______, _______, _______,                                      _______, _______, _______, _______, _______, _______,
+       _______, _______, _______,    KC_D,    KC_F, _______,                                      _______,    KC_J,    KC_K, _______, _______, _______,
   KC_CAPS_LOCK, _______, _______, _______, _______, _______,  KC_LALT, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                                    KC_F9,   KC_F5, _______,  KC_SPC, KC_LSFT, _______, KC_ENTER, KC_ESC, _______, _______
+                                    KC_F9,   KC_F5, KC_LCTL,  KC_SPC , KC_LSFT, _______, KC_ENTER, KC_ESC, _______, _______
     ),
                 
 /*
@@ -462,7 +471,7 @@ void dance_open_brackets_finished(tap_dance_state_t *state, void *user_data) {
                          D_OB,
                          KC_LPRN,
                          KC_LCBR,
-                         KC_LPRN,
+                         KC_DOUBLE_QUOTE,
                          KC_LBRC);
 }
 
@@ -487,7 +496,7 @@ void dance_close_brackets_finished(tap_dance_state_t *state, void *user_data) {
                          D_CB,
                          KC_RPRN,
                          KC_RCBR,
-                         KC_RPRN,
+                         KC_DOUBLE_QUOTE,
                          KC_RBRC);
 }
 
@@ -781,6 +790,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                   SEND_STRING(SS_TAP(X_SLASH) SS_DELAY(100) SS_TAP(X_SLASH));
           }
           break;
+  case M_KEEP_ALIVE:
+          if (record->event.pressed) {
+                  on_keep_alive_pressed();
+          }
   }
   return true;
 }
@@ -889,7 +902,7 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 #endif
         if (is_keyboard_master()) {
                 int8_t current_layer = get_highest_layer(layer_state|default_layer_state);
-                check_for_layer_change();
+                periodical_hook();
                 
                 switch (current_layer) {
                 case L_BASE:
@@ -923,6 +936,11 @@ bool oled_task_user(void) {    /* uint8_t layer = biton32(layer_state); */
 #endif
                         break;
                 }
+
+                if (keep_alive) {
+                        oled_write_P(PSTR("\nKeep-alive on"), false );
+                }
+                
 #ifdef debug_RGB_MATRIX_ENABLE                
                 if (rgb_matrix_is_enabled()) {
                         oled_write_P(PSTR("E1"), false );
@@ -1168,3 +1186,24 @@ void keyboard_pre_init_user(void) {
         set_powerled_on(false);
 }
 
+void periodical_hook(void) {
+        check_for_layer_change();
+        if (keep_alive == true) {
+                keep_alive_function();
+        }
+}
+
+void keep_alive_function(void) {
+        static uint8_t counter = 0;
+        counter++;
+        set_powerled_on(false);
+        if (counter == 0) {
+                // Post keep-alive buttons
+                tap_code(KEEP_ALIVE_KEYCODE);
+                set_powerled_on(true);
+        }
+}
+        
+void on_keep_alive_pressed(void) {
+        keep_alive = !keep_alive;
+}
