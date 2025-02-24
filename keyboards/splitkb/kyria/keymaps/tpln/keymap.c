@@ -29,13 +29,13 @@
 //    * Can not be part of combos
 //    * Or this https://jasoncarloscox.com/blog/combo-mods/
 
-#if CONVERT_TO == liatris
-#    define LIATRIS
+#if defined(CONVERT_TO) && CONVERT_TO == liatris
+#    define TPLN_LIATRIS
 #else
-#    define AVR
+#    define TPLN_AVR
 #endif
 
-#ifdef LIATRIS
+#ifdef TPLN_LIATRIS
 //#define DISPLAY_FANCY_LAYER
 #endif
 
@@ -839,6 +839,7 @@ void print_layer(const char* name, uint8_t spaces_before, uint8_t spaces_after, 
 #endif
 }
 
+#ifdef RGB_MATRIX_ENABLE
 void set_led_color_from_layer(int8_t current_layer) {
 
         switch(current_layer) {
@@ -862,6 +863,7 @@ void set_led_color_from_layer(int8_t current_layer) {
                 break;
         }
 }
+#endif
 
 void on_layer_changed(int8_t prev_layer, int8_t current_layer) {
 
@@ -871,11 +873,15 @@ void on_layer_changed(int8_t prev_layer, int8_t current_layer) {
         
         if (current_layer == L_GAMING) {
                 autoshift_disable();
+                #ifdef COMBO_ENABLE
                 combo_disable();
+                #endif
         }
         else {
                 autoshift_enable();
+                #ifdef COMBO_ENABLE
                 combo_enable();
+                #endif
         }
 }
 
@@ -1167,7 +1173,7 @@ void keyboard_post_init_user(void) {
 
 void set_powerled_on(bool on) {
 
-#ifdef LIATRIS
+#ifdef TPLN_LIATRIS
   // Set our LED pin as output
   setPinOutput(24);
   if (on) {
